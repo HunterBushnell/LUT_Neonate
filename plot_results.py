@@ -10,17 +10,17 @@ from bmtk.analyzer.compartment import plot_traces
 num = {
 'Bladaff' : 10,
 'PAGaff'  : 10,
-'EUSaff'  : 10,
+# 'EUSaff'  : 10,
 'IND'     : 10,
 'Hypo'    : 10,
-'INmplus' : 10,
-'INmminus': 10,
+# 'INmplus' : 10,
+# 'INmminus': 10,
 'PGN'     : 10,
 'FB'      : 10,
 'IMG'     : 10,
 'MPG'     : 10,
-'EUSmn'   : 10,
-'Bladmn'  : 10
+# 'EUSmn'   : 10,
+# 'Bladmn'  : 10
 }
 gids = {}
 ind = 0
@@ -47,7 +47,9 @@ def run(config_file=None,sim=None,conf=None):
 
     #plotting
     window_size = 1000
-    pops = ['Bladaff','PGN','PAGaff','EUSmn','INmminus','INmplus','IND', 'IMG', 'FB']
+    # pops = ['Bladaff','PGN','PAGaff','EUSmn','INmminus','INmplus','IND', 'IMG', 'FB']
+    pops = ['Bladaff','PGN','PAGaff','IND', 'IMG', 'FB']
+
     windows = [window_size]*len(pops)
     means = {}
     stdevs = {}

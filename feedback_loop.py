@@ -29,7 +29,7 @@ class FeedbackLoop(SimulatorMod):
         self._block_length_ms = 0.0
         self._n_cells = 0
         
-        self.blad_fr = 0.0
+        self.blad_fr = 0.0 #0.0
         self.pag_fr = 0.0
         self._prev_glob_press = 0.0
         self._glob_press = 0.0 
@@ -97,14 +97,15 @@ class FeedbackLoop(SimulatorMod):
         #### BLADDER EQUATIONS ####    
     # Grill, et al. 2016
         def blad_vol(vol):
-            f = 1.5*vol-1 # f = 1.5*20*vol - 10   #math.exp(48*vol-64.9) + 8
+            f = 1.5*8*vol - 10   #math.exp(48*vol-64.9) + 8
+            f = max(f,0.0)
             return f
 
         # Grill function returning pressure in units of cm H20
 	    # Grill, et al. 2016
       # Modified with IMG inclusion and tuned coefficients
         def pressure(fr,v,x):
-            p = 0.7*fr +  7*v - 0.7*x 
+            p = 1*fr +  1*v - 1*x
             p = max(p,0.0)
             return p 
 
@@ -146,6 +147,9 @@ class FeedbackLoop(SimulatorMod):
         
         # Grill 
         PGN_fr = max(2.0E-03*avg_fr**3 - 3.3E-02*avg_fr**2 + 1.8*avg_fr - 0.5, 0.0)
+        # if self.void:
+        #   PGN_fr = 
+        
         io.log_info("Grill PGN fr = {0} Hz".format(PGN_fr))
 
     ### STEP 2: Calculate IMG Firing Rate ###
@@ -185,6 +189,7 @@ class FeedbackLoop(SimulatorMod):
         if prev_vol == v_init:
             self.void = False
             self.fill = True 
+            PGN_fr = 0.0
             
         # Voiding
         if self.void:
@@ -252,7 +257,7 @@ class FeedbackLoop(SimulatorMod):
                 for t in spikes:
                     nc.event(t)
                     
-        if self.blad_fr > 10 and vol > 1.0:
+        if self.blad_fr > 10 and vol > 1.5:
             io.log_info("!!!PAG FIRING ACTIVATED!!!")
             self.pag_fr = 15
             

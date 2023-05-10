@@ -9,7 +9,7 @@ def plot_figure(means, stdevs, n_steps, dt, tstep=100, fbmod=None, savefig=True)
 
         color = 'tab:red'
         ax1_1.set_xlabel('Time (t) [ms]')
-        # ax1_1.set_ylabel('Bladder Volume (V) [ml]', color=color)
+        ax1_1.set_ylabel('Bladder Volume (V) [ml]', color=color)
         ax1_1.plot(fbmod.times, fbmod.b_vols, color=color)
         ax1_1.tick_params(axis='y', labelcolor=color)
 
@@ -28,33 +28,34 @@ def plot_figure(means, stdevs, n_steps, dt, tstep=100, fbmod=None, savefig=True)
     ind = np.floor(t/dt).astype(np.int)
 
     fig2 = plt.figure()
-    plt.plot(t, means['Bladaff'][ind], color='b', marker='^', mfc='b', mec='b', label='Bladder Afferent')
-    plt.plot(t, means['PGN'][ind], color='g', marker='o', mfc='g', mec='g', label='PGN')
+    plt.plot(t, means['Bladaff'][ind], color='b', marker='o', mfc='b', mec='b', label='Bladder Afferent')
+    plt.plot(t, means['PGN'][ind], color='g', marker='^', mfc='g', mec='g', label='PGN')
     plt.plot(t, means['PAGaff'][ind], color='r', marker='D', mfc='r', mec='r', label='PAG')
     plt.plot(t, means['FB'][ind], color='k', marker='D', mfc='k', mec='k', label='FB')
     plt.plot(t, means['IMG'][ind], color='y', marker='^', mfc='y', mec='y', label='IMG')
+    plt.plot(t, means['IND'][ind], color='m', marker='D', mfc='m', mec='m', label='IND')
 
     plt.xlabel('Time (t) [ms]')
     plt.ylabel('Neuron Firing Rate (FR) [Hz]')
     plt.legend()
 
 
-    fig3 = plt.figure()
-    plt.plot(t, means['INmminus'][ind], color='b', marker='^', mfc='b', mec='b', label='INm-')
-    plt.plot(t, means['EUSmn'][ind], color='m', marker='^', mfc='m', mec='m', label='EUS Afferent')
-    plt.plot(t, means['IND'][ind], color='r', marker='^', mfc='r', mec='r', label='IND')
-    plt.plot(t, means['INmplus'][ind], color='g', marker='^', mfc='g', mec='g', label='INm+')
+    # fig3 = plt.figure()
+    # # plt.plot(t, means['INmminus'][ind], color='b', marker='^', mfc='b', mec='b', label='INm-')
+    # # plt.plot(t, means['EUSmn'][ind], color='m', marker='^', mfc='m', mec='m', label='EUS Afferent')
+    # plt.plot(t, means['IND'][ind], color='r', marker='^', mfc='r', mec='r', label='IND')
+    # # plt.plot(t, means['INmplus'][ind], color='g', marker='^', mfc='g', mec='g', label='INm+')
 
-    plt.xlabel('Time (t) [ms]')
-    plt.ylabel('Neuron Firing Rate (FR) [Hz]')
-    plt.legend()
+    # plt.xlabel('Time (t) [ms]')
+    # plt.ylabel('Neuron Firing Rate (FR) [Hz]')
+    # plt.legend()
 
 
     if savefig:
         if fbmod is not None:
             fig1.savefig('./graphs/Pressure_vol.png',transparent=True)
         fig2.savefig('./graphs/NFR_PGN.png',transparent=True)
-        fig3.savefig('./graphs/NFR_INm.png',transparent=True)
+        # fig3.savefig('./graphs/NFR_INm.png',transparent=True)
 
 
     plt.show()
