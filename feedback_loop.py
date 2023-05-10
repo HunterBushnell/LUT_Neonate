@@ -97,7 +97,7 @@ class FeedbackLoop(SimulatorMod):
         #### BLADDER EQUATIONS ####    
     # Grill, et al. 2016
         def blad_vol(vol):
-            f = 1.5*8*vol - 10   #math.exp(48*vol-64.9) + 8
+            f = 1.5*7*vol - 10   #math.exp(48*vol-64.9) + 8
             f = max(f,0.0)
             return f
 
