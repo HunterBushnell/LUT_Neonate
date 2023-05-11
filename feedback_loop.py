@@ -139,6 +139,7 @@ class FeedbackLoop(SimulatorMod):
             #  print/save the actual spike-times you can call self._all_spikes[gid] += list(tvec)
             if gid < 80 and gid > 69: #PGN gids 
                 n_spikes = len(tvec)
+                # io.log_info(f'PGN n_spikes: {n_spikes}')
                 fr = n_spikes / (self._block_length_ms/1000.0)
                 summed_fr += fr
                 io.log_info(f'{gid}\t\t{fr}')
@@ -147,6 +148,9 @@ class FeedbackLoop(SimulatorMod):
         
         # Grill 
         PGN_fr = max(2.0E-03*avg_fr**3 - 3.3E-02*avg_fr**2 + 1.8*avg_fr - 0.5, 0.0)
+
+        # PGN_fr = 5
+
         # if self.void:
         #   PGN_fr = 
         
@@ -169,11 +173,11 @@ class FeedbackLoop(SimulatorMod):
         
     ### STEP 3: Volume Calculations ###
         v_init = 0.0       # TODO: get biological value for initial bladder volume
-        fill = 1.75 	 	# ml/min (Asselt et al. 2017) 175 microL / min  Herrara 2010 for rat baseline 
-        fill /= (1000 * 60) # Scale from ml/min to ml/ms
-        void = 46.0 		# 4.344 ml/min approximated from Herrera 2010; can also use 4.6 ml/min (Streng et al. 2002)
-        void /= (1000 * 60) # Scale from ml/min to ml/ms
-        max_v = 1.65 		# 1.65 ml based of Herrara 2010; 1.5 ml (Grill et al. 2019) #0.76
+        fill = 125 	 	# 10x for simulation time save, 12.5 uL/min (Z and Z 2012)
+        fill /= (1000 * 60) # Scale from ul/min to ul/ms
+        void = 100 		# 100uL/s no value, just using some logic
+        void /= (1000) # Scale from ul/s to ul/ms
+        max_v = 82.5 		# For neonatal, it depends. P1-P7 = 82.5uL (Z and Z 2012)
         vol = v_init
         
         prev_vol = v_init
@@ -211,7 +215,7 @@ class FeedbackLoop(SimulatorMod):
             vol = v_init
         
         # Grill
-        grill_vol = blad_vol(vol)
+        grill_vol = blad_vol(vol/1000)
         
     ### STEP 4: Pressure and Bladder Afferent FR Calculations ###
         x = 0 #50.0*(1.0/(1.0 + math.exp(75*(vol-0.67*max_v))) - 0.5)
@@ -257,7 +261,7 @@ class FeedbackLoop(SimulatorMod):
                 for t in spikes:
                     nc.event(t)
                     
-        if self.blad_fr > 10 and vol > 1.5:
+        if vol > 80:
             io.log_info("!!!PAG FIRING ACTIVATED!!!")
             self.pag_fr = 15
             
@@ -334,19 +338,20 @@ class FeedbackLoop(SimulatorMod):
         pc.barrier()
         
     ### STEP 6: Save Calculations ####
-        p_mmHg = 0.735559*p
+        #p_mmHg = 0.735559*p
         self._prev_glob_press = self._glob_press
-        self._glob_press = p_mmHg
+        self._glob_press = p
 
-        #io.log_info('PGN firing rate = %.2f Hz' %fr)
+        io.log_info('PGN firing rate = %.2f Hz' %fr)
         io.log_info('Volume = %.4f ml' %vol)
-        io.log_info('Pressure = %.2f mmHg' %p_mmHg)
+        io.log_info('Pressure = %.2f mmHg' %p)
         io.log_info('Calculated bladder afferent firing rate for the next time step = {:.2f} Hz \n \n'.format(self.blad_fr))
 
         # Save values in appropriate lists
         self.times.append(t)
+        # io.log_info('t value: ' %t)
         self.b_vols.append(vol)
-        self.b_pres.append(p_mmHg)
+        self.b_pres.append(p)
 
     def finalize(self, sim):
         pass
