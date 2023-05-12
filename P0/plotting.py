@@ -8,10 +8,20 @@ def plot_figure(means, stdevs, n_steps, dt, tstep=100, fbmod=None, savefig=True)
     # tstep (ms)
     tstop = (n_steps-1)*dt
     t = np.arange(0.0,tstop,tstep)
-    print(t)
     ind = np.floor(t/dt).astype(np.int)
     
     print(fbmod.times)
+    timesadd = 0.5*fbmod.times[0]
+    fbmod.times.insert(0,timesadd)
+    print(fbmod.times)
+    fbmod.times.insert(0,0.0)
+    print(fbmod.times)
+    # del fbmod.times[-1:-2]
+    del fbmod.times[len(fbmod.times)-1]
+    del fbmod.times[len(fbmod.times)-1]
+    
+    print(fbmod.times)
+    print(fbmod.b_vols)
     fbmod.times = [tx/100 for tx in fbmod.times]
     print(fbmod.times)
 
