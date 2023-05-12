@@ -8,7 +8,7 @@
   "run": {
     "nsteps_block": 5000,
     "tstop": 50000.0,
-    "dt": 0.1, 
+    "dt": 0.2, 
     "dL": 9999, 
     "spike_threshold": 0.0
   }, 
