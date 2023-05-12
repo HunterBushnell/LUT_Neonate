@@ -10,20 +10,13 @@ def plot_figure(means, stdevs, n_steps, dt, tstep=100, fbmod=None, savefig=True)
     t = np.arange(0.0,tstop,tstep)
     ind = np.floor(t/dt).astype(np.int)
     
-    print(fbmod.times)
     timesadd = 0.5*fbmod.times[0]
     fbmod.times.insert(0,timesadd)
-    print(fbmod.times)
     fbmod.times.insert(0,0.0)
-    print(fbmod.times)
     # del fbmod.times[-1:-2]
     del fbmod.times[len(fbmod.times)-1]
     del fbmod.times[len(fbmod.times)-1]
-    
-    print(fbmod.times)
-    print(fbmod.b_vols)
     fbmod.times = [tx/100 for tx in fbmod.times]
-    print(fbmod.times)
 
     if fbmod is not None:
         fig1, ax1_1 = plt.subplots(figsize=(15,5))
@@ -62,7 +55,6 @@ def plot_figure(means, stdevs, n_steps, dt, tstep=100, fbmod=None, savefig=True)
     plt.xlabel('Time (t) [s]')
     xlocs = np.arange(0.0,tstop,tstep*10)
     xlabels = [int(xl/100) for xl in xlocs]
-    print(xlabels)
     plt.xticks(xlocs, xlabels)
     plt.ylabel('Neuron Firing Rate (FR) [Hz]')
     plt.legend()

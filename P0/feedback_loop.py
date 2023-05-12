@@ -105,7 +105,7 @@ class FeedbackLoop(SimulatorMod):
 	    # Grill, et al. 2016
       # Modified with IMG inclusion and tuned coefficients
         def pressure(fr,v,x):
-            p = .25*fr +  1*v + 7 #- 1*x + 7
+            p = .25*fr +  1*v - 1*x + 7
             p = max(p,0.0)
             return p 
 
@@ -131,7 +131,7 @@ class FeedbackLoop(SimulatorMod):
 
     ### STEP 1: Calculate PGN Firing Rate ###
         io.log_info(f'Timestep {block_interval[0]*sim.dt} to {block_interval[1]*sim.dt} ms')
-        io.log_info('PGN node_id\t  Hz')
+        # io.log_info('PGN node_id\t  Hz')
         summed_fr = 0
         for gid, tvec in self._spike_records.items():
             # self._spike_records is a dictionary of the recorded spikes for each cell in the previous block of
@@ -142,25 +142,17 @@ class FeedbackLoop(SimulatorMod):
                 # io.log_info(f'PGN n_spikes: {n_spikes}')
                 fr = n_spikes / (self._block_length_ms/1000.0)
                 summed_fr += fr
-                io.log_info(f'{gid}\t\t{fr}')
+                # io.log_info(f'{gid}\t\t{fr}')
         avg_fr = summed_fr / 10.0
         io.log_info(f'PGN firing rate avg: {summed_fr / 10.0} Hz')
         
         # Grill 
         PGN_fr = max(2.0E-03*avg_fr**3 - 3.3E-02*avg_fr**2 + 1.8*avg_fr - 0.5, 0.0)
-
-        # PGN_fr = 5
-
-        if self.pag_fr < 10:
-          PGN_fr = PGN_fr*0.5
-        else: 
-          PGN_fr = PGN_fr
-          # PGN_fr = 0.5*PGN_fr
         
         io.log_info("Grill PGN fr = {0} Hz".format(PGN_fr))
 
     ### STEP 2: Calculate IMG Firing Rate ###
-        io.log_info('IMG node_gid\t  Hz')
+        # io.log_info('IMG node_gid\t  Hz')
         summed_fr = 0
         for gid, tvec in self._spike_records.items():
             # self._spike_records is a dictionary of the recorded spikes for each cell in the previous block of
@@ -170,7 +162,7 @@ class FeedbackLoop(SimulatorMod):
                 n_spikes = len(tvec)
                 fr = n_spikes / (self._block_length_ms/1000.0)
                 summed_fr += fr
-                io.log_info(f'{gid}\t\t{fr}')
+                # io.log_info(f'{gid}\t\t{fr}')
         IMG_avg_fr = summed_fr / 10.0
         io.log_info(f'IMG firing rate avg: {avg_fr} Hz')
         
@@ -273,6 +265,7 @@ class FeedbackLoop(SimulatorMod):
             if vol > max_v: 
               self.void = True 
               self.fill = False 
+              io.log_info("!!!VOIDING!!!")
             
             # PAG Firing Rate Update 
             psg = PoissonSpikeGenerator()
